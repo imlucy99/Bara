@@ -1,0 +1,167 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+html, body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: transparent !important;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* Smaller and slightly higher than the previous version. */
+.hud {
+    position: fixed;
+    right: 18px;
+    bottom: 34px;
+    width: 300px;
+    height: 230px;
+    pointer-events: none;
+}
+
+#speedometer {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.outer-arc {
+    fill: none;
+    stroke: #e47d16;
+    stroke-width: 1.8;
+    opacity: .95;
+}
+
+.tick {
+    stroke-linecap: square;
+}
+.tick.major {
+    stroke: #f4f4f4;
+    stroke-width: 3;
+}
+.tick.minor {
+    stroke: #e47d16;
+    stroke-width: 1.4;
+    opacity: .9;
+}
+
+.speed-number {
+    fill: #f2f2f2;
+    font-size: 12.5px;
+    font-weight: 700;
+}
+
+.needle,
+.needle-shadow {
+    pointer-events: none;
+    stroke-linecap: round;
+}
+
+.needle-shadow {
+    stroke: #ff8b1a;
+    stroke-width: 4.5;
+    opacity: .65;
+}
+
+.needle {
+    stroke: #ff4d1f;
+    stroke-width: 2.8;
+    filter: url(#needleGlow);
+}
+
+.needle-hub-outer {
+    fill: #121212;
+    stroke: #ff5a22;
+    stroke-width: 1.5;
+}
+
+.needle-hub {
+    fill: #ff5a22;
+}
+
+#gear-box {
+    fill: rgba(10, 10, 10, .82);
+    stroke: rgba(255,255,255,.14);
+}
+
+.gear-main {
+    fill: #fff;
+    font-size: 14px;
+    font-weight: 800;
+    text-anchor: middle;
+}
+
+.speed-unit {
+    fill: rgba(255,255,255,.42);
+    font-size: 7px;
+    font-weight: 700;
+    text-anchor: middle;
+}
+
+.icon-item {
+    fill: rgba(255,255,255,.22);
+    color: rgba(255,255,255,.22);
+    transition: color .12s ease, fill .12s ease;
+}
+
+.icon-item.active {
+    fill: #00ff66;
+    color: #00ff66;
+}
+
+.icon-item.high-beam {
+    fill: #2b9cff;
+    color: #2b9cff;
+}
+
+.icon-item.warn {
+    fill: #ff3434;
+    color: #ff3434;
+}
+
+.icon-item.locked {
+    fill: #ffdf32;
+    color: #ffdf32;
+}
+
+.fuel-label {
+    fill: rgba(255,255,255,.45);
+    font-size: 7px;
+    font-weight: 800;
+    text-anchor: middle;
+}
+
+.fuel-seg {
+    fill: rgba(255,255,255,.14);
+}
+
+.fuel-seg.active {
+    fill: #f1f1f1;
+}
+
+.fuel-icon {
+    fill: none;
+    stroke: rgba(255,255,255,.32);
+    stroke-width: 1.4;
+}
+
+.odometer {
+    fill: rgba(255,255,255,.65);
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: .7px;
+    text-anchor: middle;
+}
+
+.compat {
+    display: none;
+}
+
+.h-seg, .rpm-segment {
+    display: none;
+}
