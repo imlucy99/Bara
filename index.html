@@ -47,23 +47,28 @@
 
       <!-- Engine health -->
       <g class="engine-cluster">
-        <text x="378" y="326" class="engine-title">ENGINE</text>
+        <!-- Check-engine / MIL icon -->
+        <g class="check-engine-icon" transform="translate(392 314)">
+          <path d="M4 8h4l3-4h8l3 4h4v11h-4l-2 3H9l-2-3H4z"/>
+          <path d="M10 11h9v6h-9z" class="engine-cut"/>
+          <path d="M19 9v-4h4v4M8 19H4v-3M25 19h4v-3" />
+        </g>
         <g id="health-segments" class="health-segments"></g>
-        <text id="health-value" x="404" y="345" class="compact-value">100%</text>
+        <text id="health-value" x="405" y="344" class="compact-value">100%</text>
       </g>
 
       <!-- Fuel -->
       <g class="fuel-cluster">
-        <text x="112" y="323" class="fuel-letter">E</text>
-        <g class="fuel-icon" transform="translate(130 309)">
+        <g class="fuel-icon" transform="translate(126 315)">
           <path d="M0 3h10v17H0z"/>
           <path d="M2 5h6v5H2z" class="icon-cut"/>
           <path d="M10 6h4c2 0 3 2 3 4v6"/>
           <path d="M17 16h3v5"/>
         </g>
-        <text x="157" y="323" class="fuel-letter">F</text>
+        <text x="116" y="323" class="fuel-letter">E</text>
+        <text x="156" y="323" class="fuel-letter">F</text>
         <g id="fuel-segments" class="fuel-segments"></g>
-        <text id="fuel-value" x="139" y="343" class="compact-value">100%</text>
+        <text id="fuel-value" x="136" y="344" class="compact-value">100%</text>
       </g>
 
       <!-- Seatbelt -->

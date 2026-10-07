@@ -43,8 +43,14 @@ body{display:flex;justify-content:flex-end;align-items:flex-end}
 
 #indicator-left,#indicator-right{display:none!important}
 
-.engine-title{fill:#8b8b8b;text-anchor:middle;font-size:7px;font-weight:800;letter-spacing:1px}
+.engine-title{display:none}
 .health-segment{fill:#383838}
 .health-segment.active{fill:#ededed;filter:url(#softGlow)}
 .health-segment.warn{fill:#ff9a18}
 .health-segment.danger{fill:#ff3b2d}
+
+.check-engine-icon{fill:#777;stroke:#777;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+.check-engine-icon .engine-cut{fill:#050505;stroke:none}
+.check-engine-icon.active{fill:#ffb020;stroke:#ffb020;filter:url(#softGlow)}
+.check-engine-icon.warn{fill:#ff3b2d;stroke:#ff3b2d;filter:url(#softGlow)}
+.fuel-cluster{overflow:visible}
