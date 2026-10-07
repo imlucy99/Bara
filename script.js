@@ -154,8 +154,8 @@ window.setOdometer = function(distance) {
 
 // Keep lock/headlight/seatbelt APIs because they are useful.
 // Turn-signal APIs are intentionally no-op because the UI no longer displays them.
-window.updateLockStatus = function(state) {
-    document.getElementById('door-lock').classList.toggle('locked', isLockedState(state));
+window.updateLockStatus = function(_) {
+    // Door lock indicator intentionally hidden.
 };
 window.setDoors = window.updateLockStatus;
 window.setDoorLock = window.updateLockStatus;

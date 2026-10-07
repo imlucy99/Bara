@@ -1,7 +1,7 @@
 *{margin:0;padding:0;box-sizing:border-box;user-select:none;-webkit-user-select:none}
 html,body{width:100vw;height:100vh;background:transparent!important;overflow:hidden;font-family:"Segoe UI",Arial,sans-serif}
 body{display:flex;justify-content:flex-end;align-items:flex-end}
-.hud{width:390px;height:292px;margin:0 18px 30px 12px;pointer-events:none}
+.hud{width:430px;height:322px;margin:0 18px 34px 12px;pointer-events:none}
 #cluster{width:100%;height:100%;overflow:visible;display:block}
 
 .outer-arc{fill:none;stroke:#e67d16;stroke-width:2.1;opacity:.96}
@@ -24,7 +24,6 @@ body{display:flex;justify-content:flex-end;align-items:flex-end}
 
 .gear-box{fill:#090909;stroke:#666;stroke-width:1;opacity:.96}
 .gear{fill:#fff;text-anchor:middle;font-size:15px;font-weight:800}
-.prnd{fill:#777;text-anchor:middle;font-size:6.5px;font-weight:700;letter-spacing:.5px}
 .odo{fill:#cfcfcf;text-anchor:middle;font-size:8px;letter-spacing:.7px}
 
 .fuel-letter{fill:#8b8b8b;font-size:7px;font-weight:700}
