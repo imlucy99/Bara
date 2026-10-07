@@ -1,167 +1,45 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    user-select: none;
-    -webkit-user-select: none;
-}
+*{margin:0;padding:0;box-sizing:border-box;user-select:none;-webkit-user-select:none}
+html,body{width:100vw;height:100vh;background:transparent!important;overflow:hidden;font-family:"Segoe UI",Arial,sans-serif}
+body{display:flex;justify-content:flex-end;align-items:flex-end}
+.hud{width:390px;height:292px;margin:0 18px 30px 12px;pointer-events:none}
+#cluster{width:100%;height:100%;overflow:visible;display:block}
 
-html, body {
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-    background: transparent !important;
-    font-family: "Segoe UI", Arial, sans-serif;
-}
+.outer-arc{fill:none;stroke:#e67d16;stroke-width:2.1;opacity:.96}
+.inner-arc{fill:none;stroke:#8e4a0d;stroke-width:.8;opacity:.7}
 
-/* Smaller and slightly higher than the previous version. */
-.hud {
-    position: fixed;
-    right: 18px;
-    bottom: 34px;
-    width: 300px;
-    height: 230px;
-    pointer-events: none;
-}
+.tick{stroke-linecap:square}
+.tick.major{stroke:#f4f4f4;stroke-width:3.2}
+.tick.minor{stroke:#e57a16;stroke-width:1.25}
 
-#speedometer {
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-}
+.speed-number{fill:#f3f3f3;font-size:13px;font-weight:700;letter-spacing:-.3px}
 
-.outer-arc {
-    fill: none;
-    stroke: #e47d16;
-    stroke-width: 1.8;
-    opacity: .95;
-}
+.needle-shadow{fill:#cf5714;opacity:.75}
+.needle{fill:#ff4b20;filter:url(#needleGlow)}
+.hub-ring{fill:#111;stroke:#ff4b20;stroke-width:1.6}
+.hub{fill:#ff4b20}
 
-.tick {
-    stroke-linecap: square;
-}
-.tick.major {
-    stroke: #f4f4f4;
-    stroke-width: 3;
-}
-.tick.minor {
-    stroke: #e47d16;
-    stroke-width: 1.4;
-    opacity: .9;
-}
+.digital-box{text-anchor:middle}
+.digital-box #speed-digital{fill:#f1f1f1;font-size:24px;font-weight:800}
+.unit{fill:#9a9a9a;font-size:7px;font-weight:700;letter-spacing:1px}
 
-.speed-number {
-    fill: #f2f2f2;
-    font-size: 12.5px;
-    font-weight: 700;
-}
+.gear-box{fill:#090909;stroke:#666;stroke-width:1;opacity:.96}
+.gear{fill:#fff;text-anchor:middle;font-size:15px;font-weight:800}
+.prnd{fill:#777;text-anchor:middle;font-size:6.5px;font-weight:700;letter-spacing:.5px}
+.odo{fill:#cfcfcf;text-anchor:middle;font-size:8px;letter-spacing:.7px}
 
-.needle,
-.needle-shadow {
-    pointer-events: none;
-    stroke-linecap: round;
-}
+.fuel-letter{fill:#8b8b8b;font-size:7px;font-weight:700}
+.fuel-icon{fill:none;stroke:#8d8d8d;stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round}
+.fuel-icon .icon-cut{fill:#111;stroke:none}
+.fuel-segment{fill:#383838}
+.fuel-segment.active{fill:#ededed;filter:url(#softGlow)}
+.compact-value{fill:#777;text-anchor:middle;font-size:6px;font-weight:700}
 
-.needle-shadow {
-    stroke: #ff8b1a;
-    stroke-width: 4.5;
-    opacity: .65;
-}
+.icon-item{fill:#696969;stroke:#696969;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+.icon-item.active{fill:#35d36a;stroke:#35d36a;filter:url(#softGlow)}
+.icon-item.high-beam{fill:#3ea4ff;stroke:#3ea4ff;filter:url(#softGlow)}
+.icon-item.warn{fill:#ff3b2d;stroke:#ff3b2d;filter:url(#softGlow)}
+.icon-item.locked{fill:#ffd21b;stroke:#ffd21b;filter:url(#softGlow)}
+.seatbelt-line{fill:none;stroke:currentColor;stroke-width:1.5}
+.icon-cut{fill:#050505;stroke:none}
 
-.needle {
-    stroke: #ff4d1f;
-    stroke-width: 2.8;
-    filter: url(#needleGlow);
-}
-
-.needle-hub-outer {
-    fill: #121212;
-    stroke: #ff5a22;
-    stroke-width: 1.5;
-}
-
-.needle-hub {
-    fill: #ff5a22;
-}
-
-#gear-box {
-    fill: rgba(10, 10, 10, .82);
-    stroke: rgba(255,255,255,.14);
-}
-
-.gear-main {
-    fill: #fff;
-    font-size: 14px;
-    font-weight: 800;
-    text-anchor: middle;
-}
-
-.speed-unit {
-    fill: rgba(255,255,255,.42);
-    font-size: 7px;
-    font-weight: 700;
-    text-anchor: middle;
-}
-
-.icon-item {
-    fill: rgba(255,255,255,.22);
-    color: rgba(255,255,255,.22);
-    transition: color .12s ease, fill .12s ease;
-}
-
-.icon-item.active {
-    fill: #00ff66;
-    color: #00ff66;
-}
-
-.icon-item.high-beam {
-    fill: #2b9cff;
-    color: #2b9cff;
-}
-
-.icon-item.warn {
-    fill: #ff3434;
-    color: #ff3434;
-}
-
-.icon-item.locked {
-    fill: #ffdf32;
-    color: #ffdf32;
-}
-
-.fuel-label {
-    fill: rgba(255,255,255,.45);
-    font-size: 7px;
-    font-weight: 800;
-    text-anchor: middle;
-}
-
-.fuel-seg {
-    fill: rgba(255,255,255,.14);
-}
-
-.fuel-seg.active {
-    fill: #f1f1f1;
-}
-
-.fuel-icon {
-    fill: none;
-    stroke: rgba(255,255,255,.32);
-    stroke-width: 1.4;
-}
-
-.odometer {
-    fill: rgba(255,255,255,.65);
-    font-size: 8px;
-    font-weight: 600;
-    letter-spacing: .7px;
-    text-anchor: middle;
-}
-
-.compat {
-    display: none;
-}
-
-.h-seg, .rpm-segment {
-    display: none;
-}
+#indicator-left,#indicator-right{display:none!important}

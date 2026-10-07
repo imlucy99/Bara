@@ -1,52 +1,48 @@
 const MPS_TO_MPH = 2.236936;
+const MIN_ANGLE = -90;
+const MAX_ANGLE = 90;
 const MAX_SPEED = 260;
-const MIN_ANGLE = -120;
-const MAX_ANGLE = 120;
 
-const elSpeed = document.getElementById('speed-display');
 const elGear = document.getElementById('gear');
 const elOdo = document.getElementById('odometer');
-const elNeedle = document.getElementById('needle');
+const elNeedlePath = document.getElementById('needle-path');
 const elNeedleShadow = document.getElementById('needle-shadow');
-const elFuelSegments = document.getElementById('fuel-segments');
-const elHealthSegments = document.getElementById('health-segments');
-const elRpm = document.getElementById('rpm');
+const elSpeedDigital = document.getElementById('speed-digital');
+const elFuelValue = document.getElementById('fuel-value');
+const fuelSegments = document.getElementById('fuel-segments');
 
-const fuelSegs = [];
-const healthSegs = [];
-const rpmSegs = [];
+function clamp(v, min, max) {
+    return Math.max(min, Math.min(max, v));
+}
+
+function isTrueValue(val) {
+    return val === true || val === 1 || val === "1" || val === "true";
+}
 
 function isLockedState(val) {
-    return val === true || val === 1 || val === '1' || val === 'true' || val === 2 || val === '2';
-}
-function isTrueValue(val) {
-    return val === true || val === 1 || val === '1' || val === 'true';
+    return isTrueValue(val) || val === 2 || val === "2";
 }
 
 function polar(cx, cy, radius, angleDeg) {
-    const a = angleDeg * Math.PI / 180;
+    const a = (angleDeg - 90) * Math.PI / 180;
     return {
         x: cx + radius * Math.cos(a),
         y: cy + radius * Math.sin(a)
     };
 }
 
-function svgEl(tag) {
-    return document.createElementNS('http://www.w3.org/2000/svg', tag);
-}
-
 function buildGauge() {
     const ticks = document.getElementById('ticks');
     const numbers = document.getElementById('numbers');
 
-    // 0-260 MPH, 10 MPH minor divisions and 20 MPH major divisions.
+    // 0..260, 10 MPH minor divisions, 20 MPH numbered marks.
     for (let speed = 0; speed <= MAX_SPEED; speed += 10) {
         const angle = MIN_ANGLE + (speed / MAX_SPEED) * (MAX_ANGLE - MIN_ANGLE);
         const major = speed % 20 === 0;
-        const p1 = polar(160, 190, major ? 122 : 127, angle);
-        const p2 = polar(160, 190, 132, angle);
+        const p1 = polar(260, 302, major ? 176 : 181, angle);
+        const p2 = polar(260, 302, 188, angle);
 
-        const line = svgEl('line');
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line.setAttribute('x1', p1.x);
         line.setAttribute('y1', p1.y);
         line.setAttribute('x2', p2.x);
@@ -55,106 +51,111 @@ function buildGauge() {
         ticks.appendChild(line);
 
         if (major) {
-            const n = polar(160, 190, 105, angle);
-            const text = svgEl('text');
-            text.setAttribute('x', n.x);
-            text.setAttribute('y', n.y + 5);
-            text.setAttribute('class', 'speed-number');
-            text.setAttribute('text-anchor', 'middle');
-            text.textContent = String(speed);
-            numbers.appendChild(text);
+            const n = polar(260, 302, 158, angle);
+            const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            t.setAttribute('x', n.x);
+            t.setAttribute('y', n.y + 5);
+            t.setAttribute('class', 'speed-number');
+            t.setAttribute('text-anchor', 'middle');
+            t.textContent = speed;
+            numbers.appendChild(t);
         }
     }
 
-    // 10 fuel segments, matching the old API.
-    for (let i = 0; i < 10; i++) {
-        const r = svgEl('rect');
-        r.setAttribute('x', 62 + i * 4.2);
-        r.setAttribute('y', 221);
-        r.setAttribute('width', 3.2);
-        r.setAttribute('height', 3);
-        r.setAttribute('rx', 0.8);
-        r.setAttribute('class', 'fuel-seg');
-        elFuelSegments.appendChild(r);
-        fuelSegs.push(r);
-    }
-
-    // Hidden compatibility segment collections for scripts that inspect them.
-    for (let i = 0; i < 10; i++) {
-        const h = document.createElement('span');
-        h.className = 'h-seg';
-        elHealthSegments.appendChild(h);
-        healthSegs.push(h);
-    }
-    for (let i = 0; i < 20; i++) {
-        const r = document.createElement('span');
-        r.className = 'rpm-segment';
-        elRpm.appendChild(r);
-        rpmSegs.push(r);
+    // Compact fuel segments.
+    if (fuelSegments) {
+        for (let i = 0; i < 8; i++) {
+            const r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            r.setAttribute('x', 119 + i * 7);
+            r.setAttribute('y', 327);
+            r.setAttribute('width', 5);
+            r.setAttribute('height', 4);
+            r.setAttribute('rx', 1);
+            r.setAttribute('class', 'fuel-segment');
+            fuelSegments.appendChild(r);
+        }
     }
 }
+
 buildGauge();
 
 function setNeedleMPH(mph) {
-    const value = Math.max(0, Math.min(MAX_SPEED, Number(mph) || 0));
+    const value = clamp(Number(mph) || 0, 0, MAX_SPEED);
     const angle = MIN_ANGLE + (value / MAX_SPEED) * (MAX_ANGLE - MIN_ANGLE);
-    const p = polar(160, 190, 104, angle);
-    const ps = polar(160, 190, 99, angle);
 
-    // Direct endpoint calculation fixes the missing needle issue from the previous version.
-    elNeedle.setAttribute('x2', p.x);
-    elNeedle.setAttribute('y2', p.y);
-    elNeedleShadow.setAttribute('x2', ps.x);
-    elNeedleShadow.setAttribute('y2', ps.y);
+    // Gauge center is (260,302). Directly draw the needle so it cannot
+    // disappear because of SVG transform-origin/browser differences.
+    const rad = (angle - 90) * Math.PI / 180;
+    const length = 128;
+    const shadowLength = 132;
+    const tipX = 260 + Math.cos(rad) * length;
+    const tipY = 302 + Math.sin(rad) * length;
+    const shadowX = 260 + Math.cos(rad) * shadowLength;
+    const shadowY = 302 + Math.sin(rad) * shadowLength;
+    const px = -Math.sin(rad);
+    const py = Math.cos(rad);
+    const half = 1.8;
+    const tail = 7;
 
-    if (elSpeed) elSpeed.textContent = String(Math.round(value));
+    const path = [
+        `${260 + px * half} ${302 + py * half}`,
+        `${tipX} ${tipY}`,
+        `${260 - px * half} ${302 - py * half}`,
+        `${260 - px * tail} ${302 - py * tail}`,
+        `${260 + px * tail} ${302 + py * tail}`
+    ].join(' L ');
+
+    const shadowPath = [
+        `${260 + px * 2.4} ${302 + py * 2.4}`,
+        `${shadowX} ${shadowY}`,
+        `${260 - px * 2.4} ${302 - py * 2.4}`,
+        `${260 - px * 6} ${302 - py * 6}`,
+        `${260 + px * 6} ${302 + py * 6}`
+    ].join(' L ');
+
+    elNeedlePath.setAttribute('d', `M ${path} Z`);
+    elNeedleShadow.setAttribute('d', `M ${shadowPath} Z`);
+    elSpeedDigital.textContent = Math.round(value);
 }
 
-// 1. Speed: existing API expects m/s and is converted to MPH.
+// Existing API
 window.setSpeed = function(speed) {
     setNeedleMPH(Number(speed || 0) * MPS_TO_MPH);
 };
 
-// Optional direct MPH API.
-window.setSpeedMPH = function(mph) {
-    setNeedleMPH(mph);
+window.setRPM = function(_) {
+    // Kept for compatibility; RPM is intentionally not displayed.
 };
 
-// 2. RPM
-window.setRPM = function(rpm) {
-    const val = Number(rpm || 0);
-    const active = Math.round(Math.max(0, Math.min(1, val)) * rpmSegs.length);
-    rpmSegs.forEach((seg, i) => seg.classList.toggle('active', i < active));
-};
-
-// 3. Fuel - supports 0..1 and 0..100.
 window.setFuel = function(fuel) {
-    const val = Number(fuel || 0);
-    const percent = Math.max(0, Math.min(1, val > 1 ? val / 100 : val));
-    const active = Math.round(percent * fuelSegs.length);
-    fuelSegs.forEach((seg, i) => seg.classList.toggle('active', i < active));
+    const raw = Number(fuel || 0);
+    const percent = clamp(raw > 1 ? raw / 100 : raw, 0, 1);
+    const active = Math.round(percent * 8);
+
+    document.querySelectorAll('.fuel-segment').forEach((seg, i) => {
+        seg.classList.toggle('active', i < active);
+    });
+
+    elFuelValue.textContent = `${Math.round(percent * 100)}%`;
 };
 
-// 4. Engine health - supports 0..1 and the common 0..1000 scale.
-window.setHealth = function(health) {
-    let val = Number(health || 0);
-    let percent = val > 1 ? val / 1000 : val;
-    percent = Math.max(0, Math.min(1, percent));
-    const active = Math.round(percent * healthSegs.length);
-    healthSegs.forEach((seg, i) => seg.classList.toggle('active', i < active));
+window.setHealth = function(_) {
+    // Engine-health API kept for compatibility.
 };
 
-// 5. Gear
 window.setGear = function(gear) {
-    if (!elGear) return;
-    elGear.textContent = (gear == 0 || gear === '0') ? 'R' : String(gear);
+    elGear.textContent = (gear == 0 || gear === "0") ? 'R' : String(gear);
 };
 
-// 6. Door lock aliases
+window.setOdometer = function(distance) {
+    const value = Number(distance || 0);
+    elOdo.textContent = `ODO  ${value.toFixed(1).padStart(8, '0')}`;
+};
+
+// Keep lock/headlight/seatbelt APIs because they are useful.
+// Turn-signal APIs are intentionally no-op because the UI no longer displays them.
 window.updateLockStatus = function(state) {
-    const el = document.getElementById('door-lock');
-    if (!el) return;
-    el.classList.toggle('locked', isLockedState(state));
+    document.getElementById('door-lock').classList.toggle('locked', isLockedState(state));
 };
 window.setDoors = window.updateLockStatus;
 window.setDoorLock = window.updateLockStatus;
@@ -163,51 +164,57 @@ window.setLocked = window.updateLockStatus;
 window.setLock = window.updateLockStatus;
 window.toggleLock = window.updateLockStatus;
 
-// 7. Headlights
 window.setHeadlights = function(state) {
     const low = document.getElementById('headlight-low');
     const high = document.getElementById('headlight-high');
     const val = Number(state || 0);
-    if (low) low.classList.toggle('active', val === 1);
-    if (high) high.classList.toggle('high-beam', val === 2);
+
+    low.classList.toggle('active', val === 1);
+    high.classList.toggle('high-beam', val === 2);
 };
 
-// 8. Turn signals
-window.setLeftIndicator = function(state) {
-    const el = document.getElementById('indicator-left');
-    if (el) el.classList.toggle('active', isTrueValue(state));
-};
-window.setRightIndicator = function(state) {
-    const el = document.getElementById('indicator-right');
-    if (el) el.classList.toggle('active', isTrueValue(state));
-};
-
-// 9. Seatbelt
 window.setSeatbelts = function(state) {
     const el = document.getElementById('seatbelts');
-    if (el) {
-        el.classList.toggle('active', isTrueValue(state));
-        el.classList.toggle('warn', !isTrueValue(state));
-    }
+    const on = isTrueValue(state);
+    el.classList.toggle('active', on);
+    el.classList.toggle('warn', !on);
 };
 
-// 10. Odometer
-window.setOdometer = function(distance) {
-    if (elOdo) elOdo.textContent = `${Number(distance || 0).toFixed(1)} mi`;
-};
+// Deliberately disabled visually; API calls won't cause errors.
+window.setLeftIndicator = function(_) {};
+window.setRightIndicator = function(_) {};
 
-// Keep the old event-message compatibility.
 window.addEventListener('message', function(event) {
+    if (!event.data) return;
     const data = event.data;
-    if (!data) return;
 
-    if (data.type === 'speed' || data.action === 'speed' || data.type === 'setSpeed' || data.action === 'setSpeed') {
-        window.setSpeed(data.speed ?? data.value ?? data.data ?? 0);
+    if (data.type === 'speed' || data.action === 'speed' ||
+        data.type === 'setSpeed' || data.action === 'setSpeed') {
+        const value = data.speed ?? data.value ?? data.data;
+        if (value !== undefined) window.setSpeed(value);
     }
+
+    if (data.type === 'setFuel' || data.action === 'setFuel') {
+        window.setFuel(data.fuel ?? data.value ?? 0);
+    }
+
+    if (data.type === 'setGear' || data.action === 'setGear') {
+        window.setGear(data.gear ?? data.value ?? 1);
+    }
+
+    if (data.type === 'setOdometer' || data.action === 'setOdometer') {
+        window.setOdometer(data.distance ?? data.value ?? 0);
+    }
+
+    if (data.type === 'setSeatbelts' || data.action === 'setSeatbelts') {
+        window.setSeatbelts(data.state ?? data.status ?? false);
+    }
+
+    if (data.type === 'setHeadlights' || data.action === 'setHeadlights') {
+        window.setHeadlights(data.state ?? data.status ?? 0);
+    }
+
     if (data.type === 'setDoors' || data.action === 'setDoors' || data.type === 'lock') {
         window.updateLockStatus(data.status !== undefined ? data.status : data.state);
     }
 });
-
-// Start at zero with a visible needle.
-setNeedleMPH(0);
