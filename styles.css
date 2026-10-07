@@ -24,7 +24,7 @@ body{display:flex;justify-content:flex-end;align-items:flex-end}
 
 .gear-box{fill:#090909;stroke:#666;stroke-width:1;opacity:.96}
 .gear{fill:#fff;text-anchor:middle;font-size:15px;font-weight:800}
-.odo{fill:#cfcfcf;text-anchor:middle;font-size:8px;letter-spacing:.7px}
+.odo{fill:#e2e2e2;text-anchor:middle;font-size:9px;font-weight:600;letter-spacing:.8px}
 
 .fuel-letter{fill:#8b8b8b;font-size:7px;font-weight:700}
 .fuel-icon{fill:none;stroke:#8d8d8d;stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round}
@@ -42,3 +42,9 @@ body{display:flex;justify-content:flex-end;align-items:flex-end}
 .icon-cut{fill:#050505;stroke:none}
 
 #indicator-left,#indicator-right{display:none!important}
+
+.engine-title{fill:#8b8b8b;text-anchor:middle;font-size:7px;font-weight:800;letter-spacing:1px}
+.health-segment{fill:#383838}
+.health-segment.active{fill:#ededed;filter:url(#softGlow)}
+.health-segment.warn{fill:#ff9a18}
+.health-segment.danger{fill:#ff3b2d}

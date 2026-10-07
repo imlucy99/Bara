@@ -38,11 +38,18 @@
         <text x="260" y="282" class="unit">MPH</text>
       </g>
 
-      <!-- Gear / PRND -->
+      <!-- Gear -->
       <g class="info">
         <rect x="245" y="288" width="30" height="24" rx="3" class="gear-box"/>
         <text id="gear" x="260" y="306" class="gear">1</text>
-        <text id="odometer" x="260" y="349" class="odo">ODO&nbsp;&nbsp;000123.4</text>
+        <text id="odometer" x="260" y="352" class="odo">ODO&nbsp;&nbsp;000123.4</text>
+      </g>
+
+      <!-- Engine health -->
+      <g class="engine-cluster">
+        <text x="378" y="326" class="engine-title">ENGINE</text>
+        <g id="health-segments" class="health-segments"></g>
+        <text id="health-value" x="404" y="345" class="compact-value">100%</text>
       </g>
 
       <!-- Fuel -->
@@ -80,7 +87,6 @@
       <g id="door-lock" style="display:none"></g>
       <g id="indicator-left" style="display:none"></g>
       <g id="indicator-right" style="display:none"></g>
-      <g id="health-segments" style="display:none"></g>
       <g id="rpm" class="rpm-strip" style="display:none"></g>
     </svg>
   </div>

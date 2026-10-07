@@ -75,6 +75,21 @@ function buildGauge() {
             fuelSegments.appendChild(r);
         }
     }
+
+    // Engine health segments.
+    const healthSegments = document.getElementById('health-segments');
+    if (healthSegments) {
+        for (let i = 0; i < 6; i++) {
+            const r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            r.setAttribute('x', 379 + i * 7);
+            r.setAttribute('y', 332);
+            r.setAttribute('width', 5);
+            r.setAttribute('height', 4);
+            r.setAttribute('rx', 1);
+            r.setAttribute('class', 'health-segment');
+            healthSegments.appendChild(r);
+        }
+    }
 }
 
 buildGauge();
@@ -139,8 +154,20 @@ window.setFuel = function(fuel) {
     elFuelValue.textContent = `${Math.round(percent * 100)}%`;
 };
 
-window.setHealth = function(_) {
-    // Engine-health API kept for compatibility.
+window.setHealth = function(health) {
+    let val = Number(health || 0);
+    let percent = val > 1 ? val / 1000 : val;
+    percent = clamp(percent, 0, 1);
+
+    const active = Math.round(percent * 6);
+    document.querySelectorAll('.health-segment').forEach((seg, i) => {
+        seg.classList.toggle('active', i < active);
+        seg.classList.toggle('danger', percent <= 0.25 && i < active);
+        seg.classList.toggle('warn', percent > 0.25 && percent <= 0.50 && i < active);
+    });
+
+    const el = document.getElementById('health-value');
+    if (el) el.textContent = `${Math.round(percent * 100)}%`;
 };
 
 window.setGear = function(gear) {
