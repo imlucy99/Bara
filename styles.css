@@ -54,3 +54,5 @@ body{display:flex;justify-content:flex-end;align-items:flex-end}
 .check-engine-icon.active{fill:#ffb020;stroke:#ffb020;filter:url(#softGlow)}
 .check-engine-icon.warn{fill:#ff3b2d;stroke:#ff3b2d;filter:url(#softGlow)}
 .fuel-cluster{overflow:visible}
+
+.engine-min{fill:#777;text-anchor:middle;font-size:6px;font-weight:800}

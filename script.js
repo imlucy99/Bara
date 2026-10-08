@@ -66,9 +66,9 @@ function buildGauge() {
     if (fuelSegments) {
         for (let i = 0; i < 8; i++) {
             const r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-            r.setAttribute('x', 117 + i * 6);
-            r.setAttribute('y', 330);
-            r.setAttribute('width', 4);
+            r.setAttribute('x', 116 + i * 6);
+            r.setAttribute('y', 337);
+            r.setAttribute('width', 5);
             r.setAttribute('height', 4);
             r.setAttribute('rx', 1);
             r.setAttribute('class', 'fuel-segment');
@@ -81,9 +81,9 @@ function buildGauge() {
     if (healthSegments) {
         for (let i = 0; i < 6; i++) {
             const r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-            r.setAttribute('x', 379 + i * 7);
-            r.setAttribute('y', 332);
-            r.setAttribute('width', 4);
+            r.setAttribute('x', 385 + i * 6);
+            r.setAttribute('y', 337);
+            r.setAttribute('width', 5);
             r.setAttribute('height', 4);
             r.setAttribute('rx', 1);
             r.setAttribute('class', 'health-segment');
